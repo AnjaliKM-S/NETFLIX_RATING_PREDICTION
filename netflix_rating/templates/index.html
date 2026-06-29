@@ -1,0 +1,237 @@
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Netflix Rating Predictor Dashboard</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="/static/style.css">
+</head>
+<body>
+    <main class="container py-5">
+        <section class="text-center mb-4">
+            <h1 class="display-5 fw-bold">Netflix Rating Predictor Dashboard</h1>
+            <p class="lead text-muted">Review dataset summaries and make predictions with the same metadata preprocessing as training.</p>
+        </section>
+
+        <div class="row g-4">
+            <div class="col-12">
+                <div class="card shadow-sm dashboard-card">
+                    <div class="card-body">
+                        <div class="row text-center gy-3">
+                            <div class="col-sm-6 col-lg-3">
+                                <div class="metric-card p-3 rounded-3">
+                                    <p class="mb-1 text-muted">Total Items</p>
+                                    <h3 class="mb-0">{{ dashboard_data.summary_stats.total_items }}</h3>
+                                </div>
+                            </div>
+                            <div class="col-sm-6 col-lg-3">
+                                <div class="metric-card p-3 rounded-3">
+                                    <p class="mb-1 text-muted">Avg Duration</p>
+                                    <h3 class="mb-0">{{ dashboard_data.summary_stats.average_duration }} min</h3>
+                                </div>
+                            </div>
+                            <div class="col-sm-6 col-lg-3">
+                                <div class="metric-card p-3 rounded-3">
+                                    <p class="mb-1 text-muted">Avg Seasons</p>
+                                    <h3 class="mb-0">{{ dashboard_data.summary_stats.average_seasons }}</h3>
+                                </div>
+                            </div>
+                            <div class="col-sm-6 col-lg-3">
+                                <div class="metric-card p-3 rounded-3">
+                                    <p class="mb-1 text-muted">Avg Year Added</p>
+                                    <h3 class="mb-0">{{ dashboard_data.summary_stats.average_year_added }}</h3>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="col-xl-8">
+                <div class="row g-4">
+                    <div class="col-lg-6">
+                        <div class="card shadow-sm h-100">
+                            <div class="card-body">
+                                <h2 class="h6 mb-3">Type Distribution</h2>
+                                <div class="table-responsive">
+                                    <table class="table table-dark table-striped align-middle mb-0">
+                                        <thead>
+                                            <tr>
+                                                <th>Type</th>
+                                                <th class="text-end">Count</th>
+                                            </tr>
+                                        </thead>
+                                        <tbody>
+                                            {% for row in dashboard_data.type_counts %}
+                                            <tr>
+                                                <td>{{ row.type }}</td>
+                                                <td class="text-end">{{ row.count }}</td>
+                                            </tr>
+                                            {% endfor %}
+                                        </tbody>
+                                    </table>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-lg-6">
+                        <div class="card shadow-sm h-100">
+                            <div class="card-body">
+                                <h2 class="h6 mb-3">Rating Distribution</h2>
+                                <div class="table-responsive">
+                                    <table class="table table-dark table-striped align-middle mb-0">
+                                        <thead>
+                                            <tr>
+                                                <th>Rating</th>
+                                                <th class="text-end">Count</th>
+                                            </tr>
+                                        </thead>
+                                        <tbody>
+                                            {% for row in dashboard_data.rating_counts %}
+                                            <tr>
+                                                <td>{{ row.rating }}</td>
+                                                <td class="text-end">{{ row.count }}</td>
+                                            </tr>
+                                            {% endfor %}
+                                        </tbody>
+                                    </table>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="col-lg-6">
+                        <div class="card shadow-sm h-100">
+                            <div class="card-body">
+                                <h2 class="h6 mb-3">Top Countries</h2>
+                                <div class="table-responsive">
+                                    <table class="table table-dark table-striped align-middle mb-0">
+                                        <thead>
+                                            <tr>
+                                                <th>Country</th>
+                                                <th class="text-end">Count</th>
+                                            </tr>
+                                        </thead>
+                                        <tbody>
+                                            {% for row in dashboard_data.top_countries %}
+                                            <tr>
+                                                <td>{{ row.country }}</td>
+                                                <td class="text-end">{{ row.count }}</td>
+                                            </tr>
+                                            {% endfor %}
+                                        </tbody>
+                                    </table>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-lg-6">
+                        <div class="card shadow-sm h-100">
+                            <div class="card-body">
+                                <h2 class="h6 mb-3">Top Genres</h2>
+                                <div class="table-responsive">
+                                    <table class="table table-dark table-striped align-middle mb-0">
+                                        <thead>
+                                            <tr>
+                                                <th>Genre</th>
+                                                <th class="text-end">Count</th>
+                                            </tr>
+                                        </thead>
+                                        <tbody>
+                                            {% for row in dashboard_data.top_genres %}
+                                            <tr>
+                                                <td>{{ row.genre }}</td>
+                                                <td class="text-end">{{ row.count }}</td>
+                                            </tr>
+                                            {% endfor %}
+                                        </tbody>
+                                    </table>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="col-xl-4">
+                {% if error %}
+                    <div class="alert alert-danger shadow-sm" role="alert">
+                        {{ error }}
+                    </div>
+                {% endif %}
+
+                <div class="card shadow-sm mb-4">
+                    <div class="card-body">
+                        <h2 class="h5 card-title mb-3">Predict Netflix Rating</h2>
+                        <form action="/predict" method="post">
+                            <div class="row g-3">
+                                <div class="col-12">
+                                    <label for="duration_minutes" class="form-label">Duration (minutes)</label>
+                                    <input type="number" step="1" min="1" class="form-control" id="duration_minutes" name="duration_minutes" value="{{ input_data.duration_minutes or 90 }}" required>
+                                </div>
+                                <div class="col-12">
+                                    <label for="duration_seasons" class="form-label">Seasons</label>
+                                    <input type="number" step="1" min="1" class="form-control" id="duration_seasons" name="duration_seasons" value="{{ input_data.duration_seasons or 1 }}" required>
+                                </div>
+                                <div class="col-12">
+                                    <label for="type" class="form-label">Type</label>
+                                    <select class="form-select" id="type" name="type" required>
+                                        {% for option in type_options %}
+                                            <option value="{{ option }}" {% if input_data.type == option %}selected{% endif %}>{{ option }}</option>
+                                        {% endfor %}
+                                    </select>
+                                </div>
+                                <div class="col-12">
+                                    <label for="release_year" class="form-label">Release Year</label>
+                                    <input type="number" step="1" min="1900" max="2026" class="form-control" id="release_year" name="release_year" value="{{ input_data.release_year or 2020 }}" required>
+                                </div>
+                                <div class="col-12">
+                                    <label for="country" class="form-label">Country</label>
+                                    <select class="form-select" id="country" name="country" required>
+                                        {% for option in country_options %}
+                                            <option value="{{ option }}" {% if input_data.country == option %}selected{% endif %}>{{ option }}</option>
+                                        {% endfor %}
+                                    </select>
+                                </div>
+                                <div class="col-12">
+                                    <label for="listed_in" class="form-label">Genre Category</label>
+                                    <select class="form-select" id="listed_in" name="listed_in" required>
+                                        {% for option in listed_in_options %}
+                                            <option value="{{ option }}" {% if input_data.listed_in == option %}selected{% endif %}>{{ option }}</option>
+                                        {% endfor %}
+                                    </select>
+                                </div>
+                                <div class="col-12">
+                                    <label for="year_added" class="form-label">Year Added to Netflix</label>
+                                    <input type="number" step="1" min="2000" max="2026" class="form-control" id="year_added" name="year_added" value="{{ input_data.year_added or 2020 }}" required>
+                                </div>
+                            </div>
+                            <div class="mt-4 text-end">
+                                <button type="submit" class="btn btn-primary btn-lg w-100">Predict Rating</button>
+                            </div>
+                        </form>
+                    </div>
+                </div>
+
+                {% if result %}
+                    <div class="card result-card shadow-sm mb-4">
+                        <div class="card-body">
+                            <h3 class="h5">Prediction Result</h3>
+                            <p class="fs-4 mb-2">Predicted Rating: <strong>{{ result }}</strong></p>
+                            {% if probability %}
+                                <p class="text-muted">Confidence: {{ (probability * 100) | round(1) }}%</p>
+                            {% endif %}
+                        </div>
+                    </div>
+                {% endif %}
+            </div>
+        </div>
+
+        <footer class="text-center mt-5 text-muted">
+            <p>Netflix rating dashboard and prediction tool built with Flask and Bootstrap.</p>
+        </footer>
+    </main>
+</body>
+</html>
